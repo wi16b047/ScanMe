@@ -1,16 +1,33 @@
 package com.example.android.scanme;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button ScanMeButton;
     private Spinner spinner;
+    private WifiManager wifiManager;
+    private ListView listView;
+    private int size = 0;
+    private List<ScanResult> results;
+    private ArrayList<String> arrayList = new ArrayList<>();
+    private ArrayAdapter wifi_adapter;
 
     /*
     Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -33,10 +50,21 @@ spinner.setAdapter(adapter);
         ScanMeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //button logic
+                scanWifi();
             }
         });
 
+        listView = findViewById(R.id.wifi_List);
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+        if (!wifiManager.isWifiEnabled()) {
+            Toast.makeText(this, "WiFi is disabled ... We need to enable it", Toast.LENGTH_LONG).show();
+            wifiManager.setWifiEnabled(true);
+        }
+
+        wifi_adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
+        listView.setAdapter(wifi_adapter);
+        scanWifi();
 
         // CursorAdapter if the choices are available from a database query -> https://developer.android.com/guide/topics/ui/controls/spinner#java
         spinner = (Spinner) findViewById(R.id.location_spinner);
@@ -48,5 +76,34 @@ spinner.setAdapter(adapter);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
+    }
+
+    private void scanWifi(){
+        arrayList.clear();
+        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wifiManager.startScan();
+        Toast.makeText(this, "Scanning WiFi ...", Toast.LENGTH_SHORT).show();
+     }
+
+    BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            results = wifiManager.getScanResults();
+            //https://androidforums.com/threads/wifimanager-getscanresults-always-returns-empty-list.1266068/
+            //need to enable location services
+            for (ScanResult scanResult : results) {
+                arrayList.add(scanResult.SSID + " - " + scanResult.BSSID);
+                wifi_adapter.notifyDataSetChanged();
+            }
+            unregisterReceiver(this);
+        }
+    };
+
+    private void getGridPoints(){
+        //service, get Grid Points from database, JSON
+    }
+
+    private void assignGPToAPs(GridPoint GP, List<AccessPoint> APs){
+        //service, send date to database, JSON
     }
 }
