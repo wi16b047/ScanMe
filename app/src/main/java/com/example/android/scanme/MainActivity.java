@@ -1,11 +1,14 @@
 package com.example.android.scanme;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -89,10 +92,10 @@ spinner.setAdapter(adapter);
         @Override
         public void onReceive(Context context, Intent intent) {
             results = wifiManager.getScanResults();
-            //https://androidforums.com/threads/wifimanager-getscanresults-always-returns-empty-list.1266068/
+                //https://androidforums.com/threads/wifimanager-getscanresults-always-returns-empty-list.1266068/
             //need to enable location services
             for (ScanResult scanResult : results) {
-                arrayList.add(scanResult.SSID + " - " + scanResult.BSSID);
+                arrayList.add(scanResult.SSID + " - " + scanResult.BSSID + "    " + scanResult.level + " dBm");
                 wifi_adapter.notifyDataSetChanged();
             }
             unregisterReceiver(this);
