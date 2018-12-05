@@ -93,20 +93,27 @@ spinner.setAdapter(adapter);
         public void onReceive(Context context, Intent intent) {
             results = wifiManager.getScanResults();
                 //https://androidforums.com/threads/wifimanager-getscanresults-always-returns-empty-list.1266068/
-            //need to enable location services
+            //need to enable permission to access localization service
             for (ScanResult scanResult : results) {
+                //if(filterAP(scanResult.BSSID)){
                 arrayList.add(scanResult.SSID + " - " + scanResult.BSSID + "    " + scanResult.level + " dBm");
+                //}
                 wifi_adapter.notifyDataSetChanged();
             }
             unregisterReceiver(this);
         }
     };
 
+    /*
     //filter registered APs in database
-    //, List<AccessPoint> registeredAPs
+    //private boolean filterAP(String BSSID, List<AccessPoint> registeredAPs){
+    //  Logic, compare BSSID string to MAC-adresses in our List of registeredAP (get APs from database)
+    */
+
     //hardcoded method for testing
     private boolean filterAP(String BSSID){
-        if (BSSID == "1c:e6:c7:1d:66:d3" || BSSID == "1c:e6:c7:1d:e6:34" || BSSID == "1c:e6:c7:1d:6e:31"){
+
+        if (BSSID.equals("1c:e6:c7:1d:6e:34")) {
             return true;
         }
         else {
@@ -116,6 +123,10 @@ spinner.setAdapter(adapter);
 
     private void getGridPoints(){
         //service, get Grid Points from database, JSON
+    }
+
+    private void getAccessPoints(){
+        //service, get Access Points from database, JSON
     }
 
     private void assignGPToAPs(GridPoint GP, List<AccessPoint> APs){
