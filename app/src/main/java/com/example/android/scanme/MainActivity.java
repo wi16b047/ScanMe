@@ -105,10 +105,20 @@ spinner.setAdapter(adapter);
     };
 
     /*
-    //filter registered APs in database
-    //private boolean filterAP(String BSSID, List<AccessPoint> registeredAPs){
-    //  Logic, compare BSSID string to MAC-adresses in our List of registeredAP (get APs from database)
+    filter registered APs in database
+    private boolean filterAP(String BSSID, List<AccessPoint> registeredAPs){
+        //Logic, compare BSSID string to MAC-adresses in our List of registeredAP (get APs from database)
+        for(List<AccessPoint> filtered : registeredAPs){
+            if(filtered.getMAC().equals(BSSID)){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }      
+    }
     */
+
 
     //hardcoded method for testing
     private boolean filterAP(String BSSID){
