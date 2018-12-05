@@ -102,6 +102,18 @@ spinner.setAdapter(adapter);
         }
     };
 
+    //filter registered APs in database
+    //, List<AccessPoint> registeredAPs
+    //hardcoded method for testing
+    private boolean filterAP(String BSSID){
+        if (BSSID == "1c:e6:c7:1d:66:d3" || BSSID == "1c:e6:c7:1d:e6:34" || BSSID == "1c:e6:c7:1d:6e:31"){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     private void getGridPoints(){
         //service, get Grid Points from database, JSON
     }
